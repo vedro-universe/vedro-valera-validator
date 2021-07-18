@@ -1,1 +1,1 @@
-# vedro-valera-validator
+# Vedro Valera Validator
