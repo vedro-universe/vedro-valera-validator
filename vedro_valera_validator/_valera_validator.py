@@ -2,7 +2,7 @@ from typing import Any, Union
 
 from district42.types import Schema
 from valera import ValidationException, validate_or_fail
-from vedro._core import Dispatcher, Plugin
+from vedro.core import Dispatcher, Plugin
 from vedro.events import (
     ExceptionRaisedEvent,
     ScenarioFailedEvent,
