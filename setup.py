@@ -14,7 +14,7 @@ def find_dev_required():
 setup(
     name="vedro-valera-validator",
     version="0.1.0",
-    description="",
+    description="Validator for Vedro framework",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="Nikita Tsvetkov",
@@ -30,5 +30,6 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Typing :: Typed",
     ],
 )
