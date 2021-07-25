@@ -1,5 +1,6 @@
 # Vedro Valera Validator
 
+[![Codecov](https://img.shields.io/codecov/c/github/nikitanovosibirsk/vedro-valera-validator/master.svg?style=flat-square)](https://codecov.io/gh/nikitanovosibirsk/vedro-valera-validator)
 [![PyPI](https://img.shields.io/pypi/v/vedro-valera-validator.svg?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/vedro-valera-validator?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
 [![Python Version](https://img.shields.io/pypi/pyversions/vedro-valera-validator.svg?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
