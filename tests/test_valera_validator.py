@@ -1,7 +1,7 @@
 import sys
 from traceback import format_exception
 from types import TracebackType
-from typing import cast
+from typing import Callable, List, cast
 from unittest.mock import Mock, call, patch
 
 import pytest
@@ -29,14 +29,26 @@ def validator() -> ValeraValidator:
     return ValeraValidator()
 
 
-def make_exc_info(exc_val: Exception) -> ExcInfo:
-    def inner():
-        raise exc_val
+def raise_exception(exc_val: Exception) -> None:
+    raise exc_val
+
+
+def raise_nested_exception(exc_val: Exception) -> None:
+    def nested():
+        raise_exception(exc_val)
+    nested()
+
+
+def make_exc_info(exc_val: Exception, raise_: Callable = raise_exception) -> ExcInfo:
     try:
-        inner()
+        raise_(exc_val)
     except type(exc_val):
         *_, traceback = sys.exc_info()
     return ExcInfo(type(exc_val), exc_val, cast(TracebackType, traceback))
+
+
+def format_exc_info(exc_info: ExcInfo) -> List[str]:
+    return format_exception(exc_info.type, exc_info.value, exc_info.traceback)
 
 
 def patch_override():
@@ -96,14 +108,14 @@ async def test_validator_exception_raised_event(*, dispatcher: Dispatcher,
         validator.subscribe(dispatcher)
 
         exc_info = make_exc_info(AssertionError())
-        formatted = format_exception(exc_info.type, exc_info.value, exc_info.traceback)
+        formatted = format_exc_info(exc_info)
         event = ExceptionRaisedEvent(exc_info)
 
     with when:
         await dispatcher.fire(event)
 
     with then:
-        assert format_exception(exc_info.type, exc_info.value, exc_info.traceback) == formatted
+        assert format_exc_info(exc_info) == formatted
 
 
 @pytest.mark.asyncio
@@ -112,12 +124,12 @@ async def test_validator_exception_raised_validation_event(*, dispatcher: Dispat
     with given:
         validator.subscribe(dispatcher)
 
-        exc_info = make_exc_info(ValidationException())
-        formatted = format_exception(exc_info.type, exc_info.value, exc_info.traceback)
+        exc_info = make_exc_info(ValidationException(), raise_nested_exception)
+        formatted = format_exc_info(exc_info)
         event = ExceptionRaisedEvent(exc_info)
 
     with when:
         await dispatcher.fire(event)
 
     with then:
-        assert format_exception(exc_info.type, exc_info.value, exc_info.traceback) != formatted
+        assert format_exc_info(exc_info) == formatted[:4] + formatted[5:]
