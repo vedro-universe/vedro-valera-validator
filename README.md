@@ -7,16 +7,26 @@
 
 ## Installation
 
+### 1. Install package
+
 ```shell
 $ pip3 install vedro-valera-validator
 ```
 
-```python
-# ./bootstrap.py
-import vedro
-from vedro_valera_validator import ValeraValidator
+### 2. Enable plugin
 
-vedro.run(plugins=[ValeraValidator()])
+```python
+# ./vedro.cfg.py
+import vedro
+import vedro_valera_validator as v
+
+
+class Config(vedro.Config):
+
+    class Plugins(vedro.Config.Plugins):
+
+        class ValeraValidator(v.ValeraValidator):
+            enabled = True
 ```
 
 ## Usage
@@ -24,5 +34,5 @@ vedro.run(plugins=[ValeraValidator()])
 ### Run tests
 
 ```shell
-$ python3 bootstrap.py -vv
+$ vedro run
 ```
