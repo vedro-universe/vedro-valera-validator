@@ -8,6 +8,7 @@ import pytest
 from baby_steps import given, then, when
 from district42.types import Schema
 from valera import ValidationException, validate_or_fail
+
 from vedro.core import Dispatcher, ExcInfo, Plugin, ScenarioResult
 from vedro.events import (
     ExceptionRaisedEvent,
@@ -15,8 +16,7 @@ from vedro.events import (
     ScenarioPassedEvent,
     ScenarioRunEvent,
 )
-
-from vedro_valera_validator import ValeraValidator
+from vedro_valera_validator import ValeraValidator, ValeraValidatorPlugin
 
 
 @pytest.fixture()
@@ -25,8 +25,10 @@ def dispatcher() -> Dispatcher:
 
 
 @pytest.fixture()
-def validator() -> ValeraValidator:
-    return ValeraValidator()
+def validator(dispatcher: Dispatcher) -> ValeraValidatorPlugin:
+    validator = ValeraValidatorPlugin(ValeraValidator)
+    validator.subscribe(dispatcher)
+    return validator
 
 
 def raise_exception(exc_val: Exception) -> None:
@@ -57,17 +59,16 @@ def patch_override():
 
 def test_valera_validator():
     with when:
-        validator = ValeraValidator()
+        validator = ValeraValidatorPlugin(ValeraValidator)
 
     with then:
         assert isinstance(validator, Plugin)
 
 
 @pytest.mark.asyncio
-async def test_validator_scenario_run_event(*, dispatcher: Dispatcher, validator: ValeraValidator):
+async def test_validator_scenario_run_event(*, dispatcher: Dispatcher,
+                                            validator: ValeraValidatorPlugin):
     with given:
-        validator.subscribe(dispatcher)
-
         scenario_result = Mock(ScenarioResult)
         event = ScenarioRunEvent(scenario_result)
 
@@ -83,10 +84,9 @@ async def test_validator_scenario_run_event(*, dispatcher: Dispatcher, validator
 @pytest.mark.asyncio
 @pytest.mark.parametrize("event_class", [ScenarioPassedEvent, ScenarioFailedEvent])
 async def test_validator_scenario_end_event(event_class, *,
-                                            dispatcher: Dispatcher, validator: ValeraValidator):
+                                            dispatcher: Dispatcher,
+                                            validator: ValeraValidatorPlugin):
     with given:
-        validator.subscribe(dispatcher)
-
         scenario_result = Mock(ScenarioResult)
         with patch_override():
             await dispatcher.fire(ScenarioRunEvent(scenario_result))
@@ -103,10 +103,8 @@ async def test_validator_scenario_end_event(event_class, *,
 
 @pytest.mark.asyncio
 async def test_validator_exception_raised_event(*, dispatcher: Dispatcher,
-                                                validator: ValeraValidator):
+                                                validator: ValeraValidatorPlugin):
     with given:
-        validator.subscribe(dispatcher)
-
         exc_info = make_exc_info(AssertionError())
         formatted = format_exc_info(exc_info)
         event = ExceptionRaisedEvent(exc_info)
@@ -120,10 +118,8 @@ async def test_validator_exception_raised_event(*, dispatcher: Dispatcher,
 
 @pytest.mark.asyncio
 async def test_validator_exception_raised_validation_event(*, dispatcher: Dispatcher,
-                                                           validator: ValeraValidator):
+                                                           validator: ValeraValidatorPlugin):
     with given:
-        validator.subscribe(dispatcher)
-
         exc_info = make_exc_info(ValidationException(), raise_nested_exception)
         formatted = format_exc_info(exc_info)
         event = ExceptionRaisedEvent(exc_info)
