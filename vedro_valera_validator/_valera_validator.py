@@ -1,8 +1,8 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from district42.types import Schema
 from valera import ValidationException, validate_or_fail
-from vedro.core import Dispatcher, Plugin
+from vedro.core import Dispatcher, Plugin, PluginConfig
 from vedro.events import (
     ExceptionRaisedEvent,
     ScenarioFailedEvent,
@@ -10,11 +10,12 @@ from vedro.events import (
     ScenarioRunEvent,
 )
 
-__all__ = ("ValeraValidator",)
+__all__ = ("ValeraValidator", "ValeraValidatorPlugin",)
 
 
-class ValeraValidator(Plugin):
-    def __init__(self) -> None:
+class ValeraValidatorPlugin(Plugin):
+    def __init__(self, config: Type["ValeraValidator"]) -> None:
+        super().__init__(config)
         self._eq: Any = None
 
     def subscribe(self, dispatcher: Dispatcher) -> None:
@@ -40,3 +41,7 @@ class ValeraValidator(Plugin):
                 prev.tb_next = None
             prev = tb
             tb = tb.tb_next
+
+
+class ValeraValidator(PluginConfig):
+    plugin = ValeraValidatorPlugin
