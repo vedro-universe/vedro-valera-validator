@@ -31,8 +31,36 @@ class Config(vedro.Config):
 
 ## Usage
 
+```python
+# ./scenarios/decode_base64_encoded_string.py
+import vedro
+from base64 import b64decode
+from d42 import schema
+
+class Scenario(vedro.Scenario):
+    subject = "decode base64 encoded string"
+
+    def given(self):
+        self.encoded = "Y3VjdW1iZXI="
+
+    def when(self):
+        self.result = {
+            "result": b64decode(self.encoded)
+        }
+
+    def then(self):
+        assert self.result == schema.dict({
+            "result": schema.bytes(b"banana")
+        })
+```
+
 ### Run tests
 
 ```shell
 $ vedro run
 ```
+
+```shell
+ValidationException:
+ - Value <class 'bytes'> at _['result'] must be equal to b'banana', but b'cucumber' given
+ ```
