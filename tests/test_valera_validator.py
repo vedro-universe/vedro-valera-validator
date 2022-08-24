@@ -8,6 +8,7 @@ import pytest
 from baby_steps import given, then, when
 from district42.types import Schema
 from valera import ValidationException, validate_or_fail
+
 from vedro.core import Dispatcher, ExcInfo, Plugin, ScenarioResult
 from vedro.events import (
     ExceptionRaisedEvent,
@@ -15,7 +16,6 @@ from vedro.events import (
     ScenarioPassedEvent,
     ScenarioRunEvent,
 )
-
 from vedro_valera_validator import ValeraValidator, ValeraValidatorPlugin
 
 
