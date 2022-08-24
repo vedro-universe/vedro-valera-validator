@@ -56,7 +56,7 @@ class Scenario(vedro.Scenario):
 ### Run tests
 
 ```shell
-$ vedro run
+$ vedro run -vv
 ```
 
 ```shell
