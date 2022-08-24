@@ -1,15 +1,11 @@
-import sys
-from traceback import format_exception
-from types import TracebackType
-from typing import Callable, List, cast
-from unittest.mock import Mock, call, patch
+from unittest.mock import Mock, call
 
 import pytest
 from baby_steps import given, then, when
 from district42.types import Schema
 from valera import ValidationException, validate_or_fail
 
-from vedro.core import Dispatcher, ExcInfo, Plugin, ScenarioResult
+from vedro.core import Dispatcher, Plugin, ScenarioResult
 from vedro.events import (
     ExceptionRaisedEvent,
     ScenarioFailedEvent,
@@ -18,46 +14,19 @@ from vedro.events import (
 )
 from vedro_valera_validator import ValeraValidator, ValeraValidatorPlugin
 
+from ._utils import (
+    dispatcher,
+    format_exc_info,
+    make_exc_info,
+    patch_override,
+    raise_nested_exception,
+    validator,
+)
 
-@pytest.fixture()
-def dispatcher() -> Dispatcher:
-    return Dispatcher()
-
-
-@pytest.fixture()
-def validator(dispatcher: Dispatcher) -> ValeraValidatorPlugin:
-    validator = ValeraValidatorPlugin(ValeraValidator)
-    validator.subscribe(dispatcher)
-    return validator
-
-
-def raise_exception(exc_val: Exception) -> None:
-    raise exc_val
+__all__ = ("dispatcher", "validator",)  # fixtures
 
 
-def raise_nested_exception(exc_val: Exception) -> None:
-    def nested():
-        raise_exception(exc_val)
-    nested()
-
-
-def make_exc_info(exc_val: Exception, raise_: Callable = raise_exception) -> ExcInfo:
-    try:
-        raise_(exc_val)
-    except type(exc_val):
-        *_, traceback = sys.exc_info()
-    return ExcInfo(type(exc_val), exc_val, cast(TracebackType, traceback))
-
-
-def format_exc_info(exc_info: ExcInfo) -> List[str]:
-    return format_exception(exc_info.type, exc_info.value, exc_info.traceback)
-
-
-def patch_override():
-    return patch("district42.types.Schema.__override__", Mock())
-
-
-def test_valera_validator():
+def test_validator():
     with when:
         validator = ValeraValidatorPlugin(ValeraValidator)
 
@@ -66,8 +35,8 @@ def test_valera_validator():
 
 
 @pytest.mark.asyncio
-async def test_validator_scenario_run_event(*, dispatcher: Dispatcher,
-                                            validator: ValeraValidatorPlugin):
+@pytest.mark.usefixtures(validator.__name__)
+async def test_scenario_run_event(*, dispatcher: Dispatcher):
     with given:
         scenario_result = Mock(ScenarioResult)
         event = ScenarioRunEvent(scenario_result)
@@ -82,10 +51,9 @@ async def test_validator_scenario_run_event(*, dispatcher: Dispatcher,
 
 
 @pytest.mark.asyncio
+@pytest.mark.usefixtures(validator.__name__)
 @pytest.mark.parametrize("event_class", [ScenarioPassedEvent, ScenarioFailedEvent])
-async def test_validator_scenario_end_event(event_class, *,
-                                            dispatcher: Dispatcher,
-                                            validator: ValeraValidatorPlugin):
+async def test_scenario_end_event(event_class, *, dispatcher: Dispatcher):
     with given:
         scenario_result = Mock(ScenarioResult)
         with patch_override():
@@ -102,8 +70,8 @@ async def test_validator_scenario_end_event(event_class, *,
 
 
 @pytest.mark.asyncio
-async def test_validator_exception_raised_event(*, dispatcher: Dispatcher,
-                                                validator: ValeraValidatorPlugin):
+@pytest.mark.usefixtures(validator.__name__)
+async def test_exception_raised_event(*, dispatcher: Dispatcher):
     with given:
         exc_info = make_exc_info(AssertionError())
         formatted = format_exc_info(exc_info)
@@ -117,8 +85,8 @@ async def test_validator_exception_raised_event(*, dispatcher: Dispatcher,
 
 
 @pytest.mark.asyncio
-async def test_validator_exception_raised_validation_event(*, dispatcher: Dispatcher,
-                                                           validator: ValeraValidatorPlugin):
+@pytest.mark.usefixtures(validator.__name__)
+async def test_exception_raised_validation_event(*, dispatcher: Dispatcher):
     with given:
         exc_info = make_exc_info(ValidationException(), raise_nested_exception)
         formatted = format_exc_info(exc_info)
