@@ -5,8 +5,8 @@ from typing import Callable, List, cast
 from unittest.mock import Mock, patch
 
 import pytest
-
 from vedro.core import Dispatcher, ExcInfo
+
 from vedro_valera_validator import ValeraValidator, ValeraValidatorPlugin
 
 

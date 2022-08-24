@@ -4,7 +4,6 @@ import pytest
 from baby_steps import given, then, when
 from district42.types import Schema
 from valera import ValidationException, validate_or_fail
-
 from vedro.core import Dispatcher, Plugin, ScenarioResult
 from vedro.events import (
     ExceptionRaisedEvent,
@@ -12,6 +11,7 @@ from vedro.events import (
     ScenarioPassedEvent,
     ScenarioRunEvent,
 )
+
 from vedro_valera_validator import ValeraValidator, ValeraValidatorPlugin
 
 from ._utils import (
@@ -34,7 +34,6 @@ def test_validator():
         assert isinstance(validator, Plugin)
 
 
-@pytest.mark.asyncio
 @pytest.mark.usefixtures(validator.__name__)
 async def test_scenario_run_event(*, dispatcher: Dispatcher):
     with given:
@@ -50,7 +49,6 @@ async def test_scenario_run_event(*, dispatcher: Dispatcher):
         ]
 
 
-@pytest.mark.asyncio
 @pytest.mark.usefixtures(validator.__name__)
 @pytest.mark.parametrize("event_class", [ScenarioPassedEvent, ScenarioFailedEvent])
 async def test_scenario_end_event(event_class, *, dispatcher: Dispatcher):
@@ -69,7 +67,6 @@ async def test_scenario_end_event(event_class, *, dispatcher: Dispatcher):
         ]
 
 
-@pytest.mark.asyncio
 @pytest.mark.usefixtures(validator.__name__)
 async def test_exception_raised_event(*, dispatcher: Dispatcher):
     with given:
@@ -84,7 +81,6 @@ async def test_exception_raised_event(*, dispatcher: Dispatcher):
         assert format_exc_info(exc_info) == formatted
 
 
-@pytest.mark.asyncio
 @pytest.mark.usefixtures(validator.__name__)
 async def test_exception_raised_validation_event(*, dispatcher: Dispatcher):
     with given:
