@@ -20,7 +20,7 @@ setup(
     author="Nikita Tsvetkov",
     author_email="nikitanovosibirsk@yandex.com",
     python_requires=">=3.8",
-    url="https://github.com/nikitanovosibirsk/vedro-valera-validator",
+    url="https://github.com/vedro-universe/vedro-valera-validator",
     license="Apache-2.0",
     packages=find_packages(exclude=["tests", "tests.*"]),
     package_data={"vedro_valera_validator": ["py.typed"]},
