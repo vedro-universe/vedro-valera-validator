@@ -13,7 +13,7 @@ def find_dev_required():
 
 setup(
     name="vedro-valera-validator",
-    version="1.1.0",
+    version="1.1.1",
     description="Validator plugin for the Vedro testing framework",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
