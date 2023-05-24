@@ -14,11 +14,11 @@ def find_dev_required():
 setup(
     name="vedro-valera-validator",
     version="1.1.0",
-    description="Validator for Vedro framework",
+    description="Validator plugin for the Vedro testing framework",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="Nikita Tsvetkov",
-    author_email="nikitanovosibirsk@yandex.com",
+    author_email="tsv1@fastmail.com",
     python_requires=">=3.8",
     url="https://github.com/vedro-universe/vedro-valera-validator",
     license="Apache-2.0",
@@ -31,6 +31,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Typing :: Typed",
     ],
 )
