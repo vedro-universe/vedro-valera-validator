@@ -5,15 +5,15 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/vedro-valera-validator?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
 [![Python Version](https://img.shields.io/pypi/pyversions/vedro-valera-validator.svg?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
 
-Validator plugin for the [Vedro](https://vedro.io) testing framework.
+Validator plugin for [Vedro](https://vedro.io) testing framework.
 
-## How to Install
+## Installation
 
 <details open>
 <summary>Quick</summary>
 <p>
 
-For a quick installation, you can use a plugin manager like so:
+For a quick installation, you can use a plugin manager as follows:
 
 ```shell
 $ vedro plugin install vedro-valera-validator
@@ -34,7 +34,7 @@ To install manually, follow these steps:
 $ pip3 install vedro-valera-validator
 ```
 
-2. Then, enable the plugin in the `vedro.cfg.py` configuration file:
+2. Next, activate the plugin in your `vedro.cfg.py` configuration file:
 
 ```python
 # ./vedro.cfg.py
@@ -52,7 +52,7 @@ class Config(vedro.Config):
 </p>
 </details>
 
-## How to Use
+## Usage
 
 Here is an example scenario demonstrating how to decode a base64 encoded string:
 
@@ -85,13 +85,13 @@ Run the test using the command:
 $ vedro run -vv
 ```
 
-If the expected and actual results do not match, a `ValidationException` will be thrown, as shown below:
+If the expected and actual results don't match, a `ValidationException` will be raised, as illustrated below:
 
 ```shell
 ValidationException:
  - Value <class 'bytes'> at _['result'] must be equal to b'banana', but b'cucumber' given
  ```
 
-## Further Reading
+## Additional Resources
 
-For comprehensive guidance and more information, refer to the [official documentation](https://vedro.io/en/docs/integrations/valera-validator).
+For a detailed guide and further information, check out the  [documentation](https://vedro.io/docs/integrations/valera-validator).
