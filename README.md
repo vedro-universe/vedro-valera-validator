@@ -82,7 +82,7 @@ class Scenario(vedro.Scenario):
 Run the test using the command:
 
 ```shell
-$ vedro run -vv
+$ vedro run
 ```
 
 If the expected and actual results don't match, a `ValidationException` will be raised, as illustrated below:
