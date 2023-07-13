@@ -5,7 +5,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/vedro-valera-validator?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
 [![Python Version](https://img.shields.io/pypi/pyversions/vedro-valera-validator.svg?style=flat-square)](https://pypi.python.org/pypi/vedro-valera-validator/)
 
-Validator plugin for [Vedro](https://vedro.io) testing framework.
+[vedro-valera-validator](https://pypi.org/project/vedro-valera-validator/) is a plugin for the Vedro framework that utilizes the [valera validator](https://pypi.org/project/valera), a package designed for data validation based on [d42 (district42) schemas](https://d42.vedro.io/docs/quick-start). Valera validator provides a simple yet powerful approach to ensure your data aligns perfectly with your expectations.
 
 ## Installation
 
