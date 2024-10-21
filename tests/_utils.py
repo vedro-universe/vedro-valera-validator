@@ -45,4 +45,8 @@ def format_exc_info(exc_info: ExcInfo) -> List[str]:
 
 
 def patch_override():
-    return patch("district42.types.Schema.__override__", Mock())
+    try:
+        from d42.declaration import Schema  # noqa
+        return patch("d42.declaration.Schema.__override__", Mock())
+    except ImportError:
+        return patch("district42.types.Schema.__override__", Mock())

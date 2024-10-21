@@ -1,7 +1,12 @@
 from typing import Any, Type, Union
 
-from district42.types import Schema
-from valera import ValidationException, validate_or_fail
+from d42 import ValidationException, validate_or_fail
+
+try:
+    from d42.declaration import Schema
+except ImportError:
+    from district42.types import Schema  # type: ignore
+
 from vedro.core import Dispatcher, Plugin, PluginConfig
 from vedro.events import (
     ExceptionRaisedEvent,

@@ -2,8 +2,13 @@ from unittest.mock import Mock, call
 
 import pytest
 from baby_steps import given, then, when
-from district42.types import Schema
-from valera import ValidationException, validate_or_fail
+from d42 import ValidationException, validate_or_fail
+
+try:
+    from d42.declaration import Schema
+except ImportError:
+    from district42.types import Schema
+
 from vedro.core import Dispatcher, Plugin, ScenarioResult
 from vedro.events import (
     ExceptionRaisedEvent,
